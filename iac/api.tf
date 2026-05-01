@@ -1,24 +1,20 @@
 resource "docker_container" "api" {
-  name  = "api-${terraform.workspace}-01"
+  name  = "api-${terraform.workspace}"
   image = "lab/api"
 
-   ports {
+  env = [
+    "DB_HOST=db-${terraform.workspace}",
+    "DB_PORT=5432",
+    "DB_PASSWORD=${var.db_password[terraform.workspace]}"
+  ]
+
+  networks_advanced {
+    name = docker_network.network.name
+  }
+
+  ports {
     internal = "3000"
     external = var.api_port[terraform.workspace]
   }
 
-  networks_advanced{
-    name = docker_network.app_network.name
-   }
-
-   env = [
-    "DB_HOST=${docker_container.db.name}",
-    "DB_PORT=5432",
-    "DB_PASSWORD=password" 
-  ]
-
-  ports {
-    internal = 3000
-    external = var.api_port[terraform.workspace]
-  }
 }

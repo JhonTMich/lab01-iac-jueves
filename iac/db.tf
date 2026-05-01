@@ -1,16 +1,18 @@
 resource "docker_container" "db" {
-  name  = "db-${terraform.workspace}-01"
-  image = "postgres:16"
+  name  = "db-${terraform.workspace}"
+  image = "postgres:16-alpine"
+
   env = [
-    "POSTGRES_PASSWORD=password"
+    "POSTGRES_PASSWORD=${var.db_password[terraform.workspace]}"
   ]
 
-   ports {
+  networks_advanced {
+    name = docker_network.network.name
+  }
+
+  ports {
     internal = "5432"
     external = var.db_port[terraform.workspace]
   }
-
-   networks_advanced{
-    name = docker_network.app_network.name
-   }
+    
 }

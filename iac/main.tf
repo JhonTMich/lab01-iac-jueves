@@ -4,6 +4,11 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "4.2.0"
     }
+
+    aws = {
+      source  = "hashicorp/aws"
+      version = "6.42.0"
+    }
   }
 }
 
@@ -11,6 +16,6 @@ provider "docker" {
   # Configuration options
 }
 
-resource "docker_network" "app_network"{
-  name= "network-${terraform.workspace}"
+provider "aws" {
+  profile = "jadev"
 }
